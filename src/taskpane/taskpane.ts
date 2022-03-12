@@ -41,32 +41,21 @@ export async function edit() {
   
 }
 
+/**
+ * Inject example showing off the formula
+ */
 export async function example() {
     await Excel.run(async (context) => {
-      /**
-       * Insert your Excel code here
-       */
+
       const workbook = context.workbook;
+      const worksheet = workbook.worksheets.getActiveWorksheet();
+
+      const formula = `=CONTOSO.JS(B2,C2)`
+      const value = 5;
+      const code = `(a) => a * a`;
       
-      let range = workbook.getSelectedRange();
-      let  worksheet = range.worksheet;
-
-      range.load(["columnCount", "rowCount"]);
-
-      await context.sync();
-
-      if (range.columnCount !== 1 && range.rowCount !== 1) {
-        worksheet = workbook.worksheets.getActiveWorksheet();
-        range = worksheet.getRange("A2");
-      }
-      // fill to highlight the range changed
-      range.format.fill.color = "yellow";
-
-      const testFormula = `=CONTOSO.JS(C1, "(a) => a * a")`;
-      range.formulas =[[testFormula]];
-
-      worksheet.getRange("C1").values = [[5]];
-      await context.sync();
+      worksheet.getRange("A1:C1").values = [["formula", "code", "value"]];
+      worksheet.getRange("A2:C2").formulas = [[formula, code, value]];
 
     });
 }
