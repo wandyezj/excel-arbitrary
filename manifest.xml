@@ -2,7 +2,7 @@
 <OfficeApp xmlns="http://schemas.microsoft.com/office/appforoffice/1.1" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:bt="http://schemas.microsoft.com/office/officeappbasictypes/1.0" xmlns:ov="http://schemas.microsoft.com/office/taskpaneappversionoverrides" xsi:type="TaskPaneApp">
   <Id>0fa09bbe-aefa-44ec-a402-d806dcfc1d91</Id>
   <Version>1.0.0.0</Version>
-  <ProviderName>Contoso</ProviderName>
+  <ProviderName>Code</ProviderName>
   <DefaultLocale>en-US</DefaultLocale>
   <DisplayName DefaultValue="excel-arbitrary"/>
   <Description DefaultValue="Write your own Excel functions in JavaScript."/>
@@ -38,7 +38,6 @@
             <Metadata>
               <SourceLocation resid="Functions.Metadata.Url"/>
             </Metadata>
-            <Namespace resid="Functions.Namespace"/>
           </ExtensionPoint>
         </AllFormFactors>
         <DesktopFormFactor>
@@ -92,7 +91,7 @@
         <bt:Url id="Taskpane.Url" DefaultValue="https://localhost:3000/taskpane.html"/>
       </bt:Urls>
       <bt:ShortStrings>
-        <bt:String id="Functions.Namespace" DefaultValue="CONTOSO"/>
+        <bt:String id="Functions.Namespace" DefaultValue="RUN"/>
         <bt:String id="GetStarted.Title" DefaultValue="Get started with your sample add-in!"/>
         <bt:String id="CommandsGroup.Label" DefaultValue="Commands Group"/>
         <bt:String id="TaskpaneButton.Label" DefaultValue="Show Taskpane"/>

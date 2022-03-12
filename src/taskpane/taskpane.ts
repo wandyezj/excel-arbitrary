@@ -50,7 +50,7 @@ export async function example() {
       const workbook = context.workbook;
       const worksheet = workbook.worksheets.getActiveWorksheet();
 
-      const formula = `=CONTOSO.JS(B2,C2)`
+      const formula = `=RUN.JS(B2,C2)`
       const value = 5;
       const code = `(a) => a * a`;
       
