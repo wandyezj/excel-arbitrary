@@ -29,7 +29,7 @@ function getEditorText() {
 /**
  *
  */
-export async function save() {
+export async function save(): Promise<void> {
     await Excel.run(async (context) => {
         const workbook = context.workbook;
         const range = workbook.getSelectedRange();
@@ -51,7 +51,7 @@ export async function save() {
     });
 }
 
-export async function edit() {
+export async function edit(): Promise<void> {
     await Excel.run(async (context) => {
         const workbook = context.workbook;
         const range = workbook.getSelectedRange();
@@ -73,7 +73,7 @@ export async function edit() {
 /**
  * Inject example showing off the formula
  */
-export async function example() {
+export async function example(): Promise<void> {
     await Excel.run(async (context) => {
         const workbook = context.workbook;
         const worksheet = workbook.worksheets.getActiveWorksheet();

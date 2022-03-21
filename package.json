@@ -6,12 +6,12 @@
         "url": "https://github.com/OfficeDev/Excel-Custom-Functions.git"
     },
     "license": "MIT",
-    "engines": { "node": ">=16", "npm": ">=8"},
+    "engines": { "node": ">=16", "npm": ">=8" },
     "scripts": {
         "build": "webpack --mode production",
         "build:dev": "webpack --mode development",
         "dev-server": "webpack serve --mode development",
-        "lint": "office-addin-lint check",
+        "lint": "npm run eslint",
         "lint:fix": "office-addin-lint fix",
         "prettier": "./node_modules/.bin/prettier --config ./config/prettier.json --write \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
         "start": "npm run build & office-addin-debugging start manifest.xml",
@@ -24,7 +24,11 @@
         "watch": "webpack --mode development --watch",
         "style": "npm run prettier",
         "style-check": "npm run prettier-check",
-        "prettier-check": "./node_modules/.bin/prettier --config ./config/prettier.json --check \"@(src|test)/**/*.@(ts|js|md|html|css|json)\""
+        "prettier-check": "./node_modules/.bin/prettier --config ./config/prettier.json --check \"@(src|test)/**/*.@(ts|js|md|html|css|json)\"",
+        "lint-fix": "npm run eslint-fix",
+        "eslint": "./node_modules/.bin/eslint --config ./config/eslint.json --no-eslintrc \"@(src|test|scripts)/**/*.@(ts|js|json)\"",
+        "eslint-windows": ".\\node_modules\\.bin\\eslint --config ./config/eslint.json --no-eslintrc \"@(src|test|scripts)/**/*.@(ts|js|json)\"",
+        "eslint-fix": "./node_modules/.bin/eslint --config ./config/eslint.json --no-eslintrc --fix \"@(src|test|scripts)/**/*.@(ts|js|json)\""
     },
     "dependencies": { "core-js": "^3.9.1", "regenerator-runtime": "^0.13.7" },
     "devDependencies": {
@@ -56,7 +60,10 @@
         "webpack": "^5.50.0",
         "webpack-cli": "^4.8.0",
         "webpack-dev-server": "4.7.3",
-        "prettier": "^2.6.0"
+        "prettier": "^2.6.0",
+        "eslint": "^8.11.0",
+        "@typescript-eslint/eslint-plugin": "^5.15.0",
+        "@typescript-eslint/parser": "^5.15.0"
     },
     "prettier": "office-addin-prettier-config",
     "browserslist": ["ie 11"]
