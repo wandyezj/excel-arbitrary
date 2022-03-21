@@ -6,17 +6,14 @@
         "url": "https://github.com/OfficeDev/Excel-Custom-Functions.git"
     },
     "license": "MIT",
-    "engines": {
-        "node": ">=14 <17",
-        "npm": ">=6 <9"
-    },
+    "engines": { "node": ">=16", "npm": ">=8"},
     "scripts": {
         "build": "webpack --mode production",
         "build:dev": "webpack --mode development",
         "dev-server": "webpack serve --mode development",
         "lint": "office-addin-lint check",
         "lint:fix": "office-addin-lint fix",
-        "prettier": "office-addin-lint prettier",
+        "prettier": "./node_modules/.bin/prettier --config ./config/prettier.json --write \"@(src|test|scripts)/**/*.@(ts|js|md|html|css|json)\"",
         "start": "npm run build & office-addin-debugging start manifest.xml",
         "start:desktop": "office-addin-debugging start manifest.xml desktop --no-debug ",
         "start:web": "office-addin-debugging start manifest.xml web",
@@ -24,12 +21,12 @@
         "test:e2e": "mocha -r ts-node/register test/end-to-end/*.ts",
         "test:unit": "mocha -r ts-node/register test/unit/*.test.ts",
         "validate": "office-addin-manifest validate manifest.xml",
-        "watch": "webpack --mode development --watch"
+        "watch": "webpack --mode development --watch",
+        "style": "npm run prettier",
+        "style-check": "npm run prettier-check",
+        "prettier-check": "./node_modules/.bin/prettier --config ./config/prettier.json --check \"@(src|test)/**/*.@(ts|js|md|html|css|json)\""
     },
-    "dependencies": {
-        "core-js": "^3.9.1",
-        "regenerator-runtime": "^0.13.7"
-    },
+    "dependencies": { "core-js": "^3.9.1", "regenerator-runtime": "^0.13.7" },
     "devDependencies": {
         "@babel/core": "^7.13.16",
         "@babel/preset-typescript": "^7.13.0",
@@ -58,10 +55,9 @@
         "typescript": "^4.3.5",
         "webpack": "^5.50.0",
         "webpack-cli": "^4.8.0",
-        "webpack-dev-server": "4.7.3"
+        "webpack-dev-server": "4.7.3",
+        "prettier": "^2.6.0"
     },
     "prettier": "office-addin-prettier-config",
-    "browserslist": [
-        "ie 11"
-    ]
+    "browserslist": ["ie 11"]
 }

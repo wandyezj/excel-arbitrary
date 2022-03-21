@@ -1,39 +1,38 @@
 <!DOCTYPE html>
 <html>
+    <head>
+        <meta charset="UTF-8" />
+        <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+        <title>Excel Arbitrary</title>
 
-<head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=Edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1">
-    <title>Excel Arbitrary</title>
+        <!-- Office JavaScript API -->
+        <script
+            type="text/javascript"
+            src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"
+        ></script>
 
-    <!-- Office JavaScript API -->
-    <script type="text/javascript" src="https://appsforoffice.microsoft.com/lib/1.1/hosted/office.js"></script>
+        <!-- Template styles -->
+        <link href="taskpane.css" rel="stylesheet" type="text/css" />
+    </head>
 
-    <!-- Template styles -->
-    <link href="taskpane.css" rel="stylesheet" type="text/css" />
-</head>
+    <body>
+        Directions
+        <ul>
+            <li>
+                <button id="button_example">Show Example</button>
+            </li>
+            <li>
+                <span>Click Edit to edit the current selected formula</span>
+            </li>
+        </ul>
 
-<body>
+        <br />
+        <button id="button_edit">Edit Cell</button>
 
-    Directions
-    <ul>
-        <li>
-            <button id="button_example">Show Example</button>
-        </li>
-        <li>
-            <span>Click Edit to edit the current selected formula</span>
-        </li>
-    </ul>
+        <button id="button_save">Save Cell</button>
 
-    <br>
-    <button id="button_edit">Edit Cell</button>
-
-    <button id="button_save">Save Cell</button>
-
-    <br>
-    <textarea id="code" cols="40" rows="20"></textarea>
-    </main>
-</body>
-
+        <br />
+        <textarea id="code" cols="40" rows="20"></textarea>
+    </body>
 </html>
