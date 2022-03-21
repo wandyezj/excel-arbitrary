@@ -29,8 +29,9 @@
         "eslint": "./node_modules/.bin/eslint --config ./config/eslint.json --no-eslintrc \"@(src|test|scripts)/**/*.@(ts|js|json)\"",
         "eslint-windows": ".\\node_modules\\.bin\\eslint --config ./config/eslint.json --no-eslintrc \"@(src|test|scripts)/**/*.@(ts|js|json)\"",
         "eslint-fix": "./node_modules/.bin/eslint --config ./config/eslint.json --no-eslintrc --fix \"@(src|test|scripts)/**/*.@(ts|js|json)\""
+        
     },
-    "dependencies": { "core-js": "^3.9.1", "regenerator-runtime": "^0.13.7" },
+    "dependencies": { "core-js": "^3.9.1", "regenerator-runtime": "^0.13.7", "typescript": "^4.3.5" },
     "devDependencies": {
         "@babel/core": "^7.13.16",
         "@babel/preset-typescript": "^7.13.0",
@@ -56,7 +57,6 @@
         "request": "^2.88.2",
         "source-map-loader": "^3.0.0",
         "ts-loader": "^9.2.5",
-        "typescript": "^4.3.5",
         "webpack": "^5.50.0",
         "webpack-cli": "^4.8.0",
         "webpack-dev-server": "4.7.3",

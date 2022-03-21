@@ -1,6 +1,7 @@
-﻿
+﻿//import { compileTypeScriptCode } from "./compileTypeScriptCode";
+
 // eslint-disable-next-line
-function unpackOperands(operands: any[][][]) {
+function unpackOperands(operands: any[][][]): unknown[] {
     const values = operands.map((value) => {
         if (typeof value === "object") {
             // unwrap single objects [[x]]
@@ -25,7 +26,7 @@ function unpackOperands(operands: any[][][]) {
 }
 
 // eslint-disable-next-line
-function runCode(code: string, values: (any[] | string | number)[]) {
+function runCode(code: string, values: (any[] | string | number | unknown)[]) {
     const lambda = eval(code);
     const result = lambda(...values);
     return result;
@@ -37,6 +38,12 @@ function runJavaScript(code: string, operands: any[][][]) {
     const values = unpackOperands(operands);
     const result = runCode(code, values);
     return result;
+}
+
+
+// eslint-disable-next-line @typescript-eslint/no-unused-vars
+async function runTypeScript(code: string, operands: any[][][]) {
+    return "ts no";
 }
 
 /**
@@ -59,18 +66,18 @@ export function JS(code: string, operands: any[][][]): string {
  * @returns result of the code
  */
 // eslint-disable-next-line
-export function run(code: string, operands: any[][][]): string {
+export async function run(code: string, operands: any[][][]): Promise<string> {
     // unpack operands
-    if (code.startsWith("# python\n") || code.startsWith("#python\n")) {
+    if (code.startsWith("#python\n")) {
         return "PYTHON NOT IMPLEMENTED";
-    } else if (code.startsWith("// javascript\n") || code.startsWith("//javascript\n")) {
+    } else if (code.startsWith("//javascript\n")) {
         return runJavaScript(code, operands);
+    } else if (code.startsWith("//typescript\n")) {
+        return await runTypeScript(code, operands);
     }
 
     return "Not Implemented";
 }
-
-
 
 // hmm can't put the operands first? and then have a different parameter? TypeScript does this fine...
 
