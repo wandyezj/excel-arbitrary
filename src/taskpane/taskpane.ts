@@ -1,4 +1,4 @@
-/* global console, document, Excel, Office */
+/* eslint-disable */
 
 let codeArea: HTMLTextAreaElement = undefined;
 // address is not tracked
@@ -9,7 +9,7 @@ Office.onReady(() => {
     document.getElementById("button_example").onclick = example;
     document.getElementById("button_edit").onclick = edit;
     document.getElementById("button_save").onclick = save;
-
+    document.getElementById("button_run").onclick = run;
     codeArea = document.getElementById("code") as HTMLTextAreaElement;
 });
 
@@ -68,6 +68,42 @@ export async function edit(): Promise<void> {
             console.log("selected more than a cell");
         }
     });
+}
+interface Pyodide {
+    runPython: (code: string) => string;
+    globals: {
+        set: (key: string, value: string | number | unknown) => void;
+    };
+}
+
+declare function loadPyodide(options: { indexURL: string }): Pyodide;
+
+let p: Pyodide = undefined;
+async function getPyodide(): Promise<Pyodide> {
+    if (p === undefined) {
+        p = await loadPyodide({
+            indexURL: "https://cdn.jsdelivr.net/pyodide/v0.19.1/full/",
+        });
+    }
+
+    return p;
+}
+
+export async function run(): Promise<void> {
+    let pyodide = await getPyodide();
+    // Pyodide is now ready to use...
+    console.log(
+        pyodide.runPython(`
+import sys
+sys.version
+`));
+
+    // assign all values to global args
+    pyodide.globals.set("args", [5,5,5,5]);
+    console.log(pyodide.runPython(`
+[a,b, *other] = args
+a + b`
+));
 }
 
 function addTestRange(

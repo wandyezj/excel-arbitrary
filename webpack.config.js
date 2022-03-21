@@ -12,7 +12,11 @@ const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DE
 
 async function getHttpsOptions() {
     const httpsOptions = await devCerts.getHttpsServerOptions();
-    return { cacert: httpsOptions.ca, key: httpsOptions.key, cert: httpsOptions.cert };
+    return {
+        cacert: httpsOptions.ca,
+        key: httpsOptions.key,
+        cert: httpsOptions.cert,
+    };
 }
 
 module.exports = async (env, options) => {
@@ -23,29 +27,26 @@ module.exports = async (env, options) => {
         entry: {
             polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
             functions: "./src/functions/functions.ts",
+            // functions: {
+            //     import: "./src/functions/functions.ts",
+            //     dependOn: "ts",
+            // },
             taskpane: "./src/taskpane/taskpane.ts",
+            //ts: "typescript",
         },
         output: {
-            devtoolModuleFilenameTemplate: "webpack:///[resource-path]?[loaders]",
+            devtoolModuleFilenameTemplate:
+                "webpack:///[resource-path]?[loaders]",
             clean: true,
         },
         resolve: {
-            extensions: [".ts", ".tsx", ".html", ".js"],
+            extensions: [".ts", ".html", ".js"],
         },
         module: {
+            noParse: [require.resolve("typescript/lib/typescript.js")],
             rules: [
                 {
                     test: /\.ts$/,
-                    exclude: /node_modules/,
-                    use: {
-                        loader: "babel-loader",
-                        options: {
-                            presets: ["@babel/preset-typescript"],
-                        },
-                    },
-                },
-                {
-                    test: /\.tsx?$/,
                     exclude: /node_modules/,
                     use: "ts-loader",
                 },
@@ -91,7 +92,9 @@ module.exports = async (env, options) => {
                             if (dev) {
                                 return content;
                             } else {
-                                return content.toString().replace(new RegExp(urlDev, "g"), urlProd);
+                                return content
+                                    .toString()
+                                    .replace(new RegExp(urlDev, "g"), urlProd);
                             }
                         },
                     },
@@ -103,9 +106,15 @@ module.exports = async (env, options) => {
             headers: {
                 "Access-Control-Allow-Origin": "*",
             },
-            https: env.WEBPACK_BUILD || options.https !== undefined ? options.https : await getHttpsOptions(),
+            https:
+                env.WEBPACK_BUILD || options.https !== undefined
+                    ? options.https
+                    : await getHttpsOptions(),
             port: process.env.npm_package_config_dev_server_port || 3000,
         },
+        stats: {
+            errorDetails: true
+        }
     };
 
     return config;

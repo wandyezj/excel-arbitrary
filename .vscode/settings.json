@@ -2,7 +2,7 @@
     "eslint.validate": ["javascript", "javascriptreact", "typescript"],
     "prettier.configPath": "config/prettier.json",
     "eslint.options": {
-        "configFile": "config/eslint.json",
-        "resolvePluginsRelativeTo": "${workspaceFolder}"
+        "overrideConfigFile": "config/eslint.json",
+        "resolvePluginsRelativeTo": "${workspaceFolder}",
     }
 }

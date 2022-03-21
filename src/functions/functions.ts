@@ -1,4 +1,6 @@
-﻿//import { compileTypeScriptCode } from "./compileTypeScriptCode";
+﻿
+/* eslint-disable */
+//import { compileTypeScriptCode } from "./compileTypeScriptCode";
 
 // eslint-disable-next-line
 function unpackOperands(operands: any[][][]): unknown[] {
@@ -43,7 +45,18 @@ function runJavaScript(code: string, operands: any[][][]) {
 
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function runTypeScript(code: string, operands: any[][][]) {
-    return "ts no";
+    return "TypeScript Not Implemented";
+    // const {outputText, compileErrorMessage } = await compileTypeScriptCode(code);
+    // if (compileErrorMessage) {
+    //     return compileErrorMessage;
+    // }
+
+    // if (outputText) {
+    //     const result = runJavaScript(outputText, operands);
+    //     return result;
+    // }
+
+    //return "ERROR: Unknown Compilation Issue";
 }
 
 /**
@@ -53,10 +66,10 @@ async function runTypeScript(code: string, operands: any[][][]) {
  * @param operands A number (such as 1 or 3.1415), a cell address (such as A1 or $E$11), or a range of cell addresses (such as B3:F12)
  * @returns result of the code
  */
-// eslint-disable-next-line
 export function JS(code: string, operands: any[][][]): string {
     return runJavaScript(code, operands);
 }
+
 
 /**
  * Execute code (code, ...values)
@@ -65,38 +78,20 @@ export function JS(code: string, operands: any[][][]): string {
  * @param operands A number (such as 1 or 3.1415), a cell address (such as A1 or $E$11), or a range of cell addresses (such as B3:F12)
  * @returns result of the code
  */
-// eslint-disable-next-line
 export async function run(code: string, operands: any[][][]): Promise<string> {
     // unpack operands
-    if (code.startsWith("#python\n")) {
-        return "PYTHON NOT IMPLEMENTED";
-    } else if (code.startsWith("//javascript\n")) {
-        return runJavaScript(code, operands);
-    } else if (code.startsWith("//typescript\n")) {
-        return await runTypeScript(code, operands);
+    try {
+        if (code.startsWith("#python\n")) {
+            return "PYTHON NOT IMPLEMENTED";
+        } else if (code.startsWith("//javascript\n")) {
+            return runJavaScript(code, operands);
+        } else if (code.startsWith("//typescript\n")) {
+            return await runTypeScript(code, operands);
+        }
+    
+        return "Not Implemented";
+    } catch (e) {
+        return "ERROR: Uncaught"
     }
 
-    return "Not Implemented";
 }
-
-// hmm can't put the operands first? and then have a different parameter? TypeScript does this fine...
-
-// /**
-//  * Execute JavaScript (...values, code)
-//  * @customfunction
-//  * @param operands A number (such as 1 or 3.1415), a cell address (such as A1 or $E$11), or a range of cell addresses (such as B3:F12), with the final being the JavaScript Lambda code string
-//  * @returns result of the code
-//  */
-//  export function JSAlt(operands: any[][][]): string {
-//   // unpack operands
-//   const values = unpackOperands(operands);
-
-//   // code is last operand
-//   let code  = values.pop();
-//   if (typeof code !== "string") {
-//     return "code must be the last value";
-//   }
-
-//   const result = runCode(code, values);
-//   return result;
-// }
