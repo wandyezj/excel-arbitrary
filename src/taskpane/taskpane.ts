@@ -97,7 +97,6 @@ export async function example(): Promise<void> {
             code: "code",
             value: "value",
         });
-        //worksheet.getRange(`A${n}:D${n}`).values = [["description", "formula", "code", "value"]];
 
         // js
         n++;
@@ -110,79 +109,36 @@ can take in arbitrary number of values`,
             code: `(a) => a * a`,
         });
 
-//         // eslint-disable-next-line
-//         const description = `
-// js
-// Use a specific run function
-// can take in arbitrary number of values`.trim();
-//         const formula = `=JS(C${n}, D${n})`;
-//         const code = `
-// (a) => a * a`;
-//         const value = 5;
-//         worksheet.getRange(`A${n}:D${n}`).formulas = [[description, formula, code, value]];
 
         // run javascript
         n++;
         addTestRange(worksheet, n, {
-            description: `run - javascript`, 
+            description: `run - JavaScript - basic`, 
             code: `//javascript
 (a) => a * a
 `
         });
 
-//         const descriptionJavaScript = `
-// run - javascript
-// `.trim();
-//         const formulaJavaScript = `=RUN(C${n}, D${n})`;
-//         const codeJavaScript = `//javascript
-// (a) => a * a
-// `;
-//         const valueJavaScript = 5;
-//         worksheet.getRange(`A${n}:D${n}`).formulas = [[descriptionJavaScript,formulaJavaScript, codeJavaScript, valueJavaScript]];
-
-        // run typescript
+        // TypeScript - basic
         n++;
         addTestRange(worksheet, n, {
-            description: `run - typescript`, 
+            description: `run - TypeScript - basic`, 
             code: `//typescript
 (a) => a * a
 `
         });
 
-//         const descriptionTypeScript = `
-// run - javascript
-// `.trim();
-//         const formulaTypeScript = `=RUN(C${n}, D${n})`;
-//         const codeTypeScript = `//javascript
-// (a) => a * a
-// `;
-//         const valueTypeScript = 5;
-//         worksheet.getRange(`A${n}:D${n}`).formulas = [[descriptionTypeScript,formulaTypeScript, codeTypeScript, valueTypeScript]];
-
-
-
-        // run python
+        // python - basic
         n++;
         addTestRange(worksheet, n, {
             description: `
-run - python
+run - Python - basic
 Use special local args
 to pass in values`, 
             code: `#python
 [a] = args
 a * a`
         });
-
-//         const descriptionPython = `
-// run - python
-// Use special local args
-// to pass in values`.trim();
-//         const formulaPython = `=RUN(C${n}, D${n})`;
-//         const codePython = `#python
-// [a] = args
-// a * a`;
-//         const valuePython = 5;
-//         worksheet.getRange(`A${n}:D${n}`).formulas = [[descriptionPython, formulaPython, codePython, valuePython]];
 
 
     });
