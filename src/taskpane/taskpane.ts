@@ -1,26 +1,42 @@
 /* eslint-disable */
 
-let codeArea: HTMLTextAreaElement = undefined;
+let codeArea: HTMLTextAreaElement | undefined = undefined;
 // address is not tracked
-let cellAddress: string = undefined;
+let cellAddress: string | undefined = undefined;
+
+import { example } from "./example";
+import { runPython } from "./runPython";
 
 // The initialize function must be run each time a new page is loaded
 Office.onReady(() => {
-    document.getElementById("button_example").onclick = example;
-    document.getElementById("button_edit").onclick = edit;
-    document.getElementById("button_save").onclick = save;
-    document.getElementById("button_run").onclick = run;
+    const mapping: [string, () => Promise<void>][] = [
+        ["button_example", example],
+        ["button_edit", edit],
+        ["button_save", save],
+        ["button_run", run],
+    ];
+
+    mapping.forEach(([key, value]) => {
+        const element = document.getElementById(key);
+        if (element) {
+            element.onclick = value;
+        }
+    });
+
     codeArea = document.getElementById("code") as HTMLTextAreaElement;
 });
 
 function setEditorText({ text, cell }) {
     console.log(`set: ${cell} ${text}`);
-    codeArea.value = text;
+    if (codeArea) {
+        codeArea.value = text;
+    }
+
     cellAddress = cell;
 }
 
 function getEditorText() {
-    const text = codeArea.value;
+    const text = codeArea?.value || "";
     const cell = cellAddress;
     console.log(`get: ${cell} ${text}`);
     return { text, cell };
@@ -69,124 +85,23 @@ export async function edit(): Promise<void> {
         }
     });
 }
-interface Pyodide {
-    runPython: (code: string) => string;
-    globals: {
-        set: (key: string, value: string | number | unknown) => void;
-    };
-}
-
-declare function loadPyodide(options: { indexURL: string }): Pyodide;
-
-let p: Pyodide = undefined;
-async function getPyodide(): Promise<Pyodide> {
-    if (p === undefined) {
-        p = await loadPyodide({
-            indexURL: "https://cdn.jsdelivr.net/pyodide/v0.19.1/full/",
-        });
-    }
-
-    return p;
-}
 
 export async function run(): Promise<void> {
-    let pyodide = await getPyodide();
-    // Pyodide is now ready to use...
-    console.log(
-        pyodide.runPython(`
+    //const code = getEditorText();
+    // run appropriate version
+
+    let result = runPython(`
 import sys
 sys.version
-`));
+    `);
+    console.log(result);
 
-    // assign all values to global args
-    pyodide.globals.set("args", [5,5,5,5]);
-    console.log(pyodide.runPython(`
+    result = runPython(
+        `
 [a,b, *other] = args
-a + b`
-));
-}
-
-function addTestRange(
-    worksheet: Excel.Worksheet,
-    n: number,
-    {
-        description,
-        formula,
-        code,
-        value,
-    }: {
-        description: string;
-        formula?: string;
-        code: string;
-        value?: string | number;
-    }
-) {
-    worksheet.getRange(`A${n}:D${n}`).values = [
-        // eslint-disable-next-line
-        [description.trim(), formula || `=RUN(C${n}, D${n})`, code, value || 5],
-    ];
-}
-
-/**
- * Inject example showing off the formula
- */
-export async function example(): Promise<void> {
-    await Excel.run(async (context) => {
-        const workbook = context.workbook;
-        const worksheet = workbook.worksheets.getActiveWorksheet();
-
-        let n = 0;
-
-        // headers
-        n++;
-        addTestRange(worksheet, n, {
-            description: "description",
-            // eslint-disable-next-line
-            formula: "formula",
-            code: "code",
-            value: "value",
-        });
-
-        // js
-        n++;
-        addTestRange(worksheet, n, {
-            description: `
-js
-Use a specific run function
-can take in arbitrary number of values`,
-            // eslint-disable-next-line
-            formula: `=JS(C${n}, D${n})`,
-            code: `(a) => a * a`,
-        });
-
-        // run javascript
-        n++;
-        addTestRange(worksheet, n, {
-            description: `run - JavaScript - basic`,
-            code: `//javascript
-(a) => a * a
-`,
-        });
-
-        // TypeScript - basic
-        n++;
-        addTestRange(worksheet, n, {
-            description: `run - TypeScript - basic`,
-            code: `//typescript
-(a) => a * a
-`,
-        });
-
-        // python - basic
-        n++;
-        addTestRange(worksheet, n, {
-            description: `
-run - Python - basic
-Use special local args
-to pass in values`,
-            code: `#python
-[a] = args
-a * a`,
-        });
-    });
+a + b
+    `,
+        [5, 5, 5, 5]
+    );
+    console.log(result);
 }

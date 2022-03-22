@@ -25,7 +25,6 @@ module.exports = async (env, options) => {
     const config = {
         devtool: "source-map",
         entry: {
-            polyfill: ["core-js/stable", "regenerator-runtime/runtime"],
             functions: "./src/functions/functions.ts",
             // functions: {
             //     import: "./src/functions/functions.ts",
@@ -72,12 +71,12 @@ module.exports = async (env, options) => {
             new HtmlWebpackPlugin({
                 filename: "functions.html",
                 template: "./src/functions/functions.html",
-                chunks: ["polyfill", "functions"],
+                chunks: ["functions"],
             }),
             new HtmlWebpackPlugin({
                 filename: "taskpane.html",
                 template: "./src/taskpane/taskpane.html",
-                chunks: ["polyfill", "taskpane"],
+                chunks: ["taskpane"],
             }),
             new CopyWebpackPlugin({
                 patterns: [

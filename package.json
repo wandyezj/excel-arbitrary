@@ -33,8 +33,6 @@
         "eslint-fix": "./node_modules/.bin/eslint --config ./config/eslint.json --no-eslintrc --fix \"@(src|test|scripts)/**/*.@(ts|js|json)\""
     },
     "dependencies": {
-        "core-js": "^3.9.1",
-        "regenerator-runtime": "^0.13.7",
         "typescript": "^4.3.5"
     },
     "devDependencies": {

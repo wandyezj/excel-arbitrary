@@ -1,6 +1,7 @@
-﻿
-/* eslint-disable */
+﻿/* eslint-disable */
 //import { compileTypeScriptCode } from "./compileTypeScriptCode";
+
+import { getLanguage, Language } from "./getLanguage";
 
 // eslint-disable-next-line
 function unpackOperands(operands: any[][][]): unknown[] {
@@ -42,7 +43,6 @@ function runJavaScript(code: string, operands: any[][][]) {
     return result;
 }
 
-
 // eslint-disable-next-line @typescript-eslint/no-unused-vars
 async function runTypeScript(code: string, operands: any[][][]) {
     return "TypeScript Not Implemented";
@@ -59,6 +59,10 @@ async function runTypeScript(code: string, operands: any[][][]) {
     //return "ERROR: Unknown Compilation Issue";
 }
 
+async function runPython(code: string, operands: any[][][]) {
+    return "Python NOT Implemented";
+}
+
 /**
  * Execute JavaScript (code, ...values)
  * @customfunction
@@ -70,7 +74,6 @@ export function JS(code: string, operands: any[][][]): string {
     return runJavaScript(code, operands);
 }
 
-
 /**
  * Execute code (code, ...values)
  * @customfunction
@@ -81,17 +84,19 @@ export function JS(code: string, operands: any[][][]): string {
 export async function run(code: string, operands: any[][][]): Promise<string> {
     // unpack operands
     try {
-        if (code.startsWith("#python\n")) {
-            return "PYTHON NOT IMPLEMENTED";
-        } else if (code.startsWith("//javascript\n")) {
-            return runJavaScript(code, operands);
-        } else if (code.startsWith("//typescript\n")) {
-            return await runTypeScript(code, operands);
-        }
-    
-        return "Not Implemented";
-    } catch (e) {
-        return "ERROR: Uncaught"
-    }
+        const language = getLanguage(code);
 
+        switch (language) {
+            case Language.JavaScript:
+                return runJavaScript(code, operands);
+            case Language.TypeScript:
+                return runTypeScript(code, operands);
+            case Language.Python:
+                return runPython(code, operands);
+            default:
+                return "Language Not Identified";
+        }
+    } catch (e) {
+        return `ERROR: Uncaught ${e}`;
+    }
 }

@@ -39,3 +39,15 @@ can pass things in with an args variable.
 TypeScript?
 
 What if you could run a cell in the editor to try things out and get error information or console log statements?
+
+## notes
+https://docs.microsoft.com/en-us/office/dev/add-ins/testing/sideload-office-add-ins-for-testing
+
+npm run start:web -- --document "url"
+
+## Improvements
+
+- explanation of tooling
+- why does dev-server fail all the time?
+- how to clear cache on web?
+- custom function stick around can't replace?
