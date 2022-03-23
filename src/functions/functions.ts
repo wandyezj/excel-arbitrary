@@ -1,8 +1,9 @@
 ﻿/* eslint-disable */
 //import { compileTypeScriptCode } from "./compileTypeScriptCode";
 
-import { runJavaScript, runLanguage } from "./runLanguage";
-
+import { runLanguage } from "./runLanguage";
+import { runJavaScript } from "../taskpane/runJavaScript";
+import { unpackOperands } from "./unpackOperands";
 
 /**
  * Execute JavaScript (code, ...values)
@@ -12,7 +13,8 @@ import { runJavaScript, runLanguage } from "./runLanguage";
  * @returns result of the code
  */
 export function JS(code: string, operands: any[][][]): string {
-    return runJavaScript(code, operands);
+    const args = unpackOperands(operands);
+    return runJavaScript(code, args);
 }
 
 
@@ -47,6 +49,6 @@ export async function RUNA(code: string, operands: any[][][]): Promise<string> {
  * @param operands A number (such as 1 or 3.1415), a cell address (such as A1 or $E$11), or a range of cell addresses (such as B3:F12)
  * @returns result of the code
  */
- export async function TEST5(code: string, operands: any[][][]): Promise<string> {
+ export async function TEST7(code: string, operands: any[][][]): Promise<string> {
     return runLanguage(code, operands);
 }

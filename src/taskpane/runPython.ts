@@ -23,7 +23,7 @@ async function getPyodide(): Promise<Pyodide> {
     return p;
 }
 
-export async function runPython(code: string, args: unknown[] = []) {
+export async function runPython(code: string, args: unknown[] = []): Promise<unknown> {
     const pyodide = await getPyodide();
 
     // Pyodide is now ready to use...

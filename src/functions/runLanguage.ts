@@ -1,5 +1,7 @@
 //import { compileTypeScriptCode } from "../taskpane/compileTypeScriptCode";
 
+import { unpackOperands } from "./unpackOperands";
+
 
 export async function runLanguage(code: string, operands: any[][][]): Promise<string> {
     // unpack operands
@@ -45,63 +47,35 @@ function getLanguage(code: string): Language {
 }
 
 
-// eslint-disable-next-line
-function unpackOperands(operands: any[][][]): unknown[] {
-    const values = operands.map((value) => {
-        if (typeof value === "object") {
-            // unwrap single objects [[x]]
-            if (Array.isArray(value)) {
-                if (value.length === 1) {
-                    const firstColumn = value[0];
-                    if (Array.isArray(firstColumn)) {
-                        if (firstColumn.length === 1) {
-                            const single = firstColumn[0];
-                            return single;
-                        }
-                    }
-                }
-            }
-        }
 
-        // anything that is not a single value make undefined
-        return undefined;
-    });
-
-    return values;
+interface window {
+    sharedState?: {
+        value: string;
+        runPython: (code: string, args?: any[]) => Promise<unknown>;
+        runJavaScript: (code: string, args?: any[]) => Promise<unknown>;
+        runTypeScript: (code: string, args?: any[]) => Promise<unknown>;
+    }
 }
 
-// eslint-disable-next-line
-function runCode(code: string, values: (any[] | string | number | unknown)[]) {
-    const lambda = eval(code);
-    const result = lambda(...values);
-    return result;
-}
+async function runArbitrary(runner: string, code: string, operands: any[][][]) {
+    const sharedState = window ?  window["sharedState"] : undefined;
+    const run = sharedState? sharedState[runner] : undefined;
 
-// eslint-disable-next-line
-export function runJavaScript(code: string, operands: any[][][]) {
-    // unpack operands
-    const values = unpackOperands(operands);
-    const result = runCode(code, values);
-    return result;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-unused-vars
-async function runTypeScript(code: string, operands: any[][][]) {
-    return "TypeScript Not Implemented";
-    // const {outputText, compileErrorMessage } = await compileTypeScriptCode(code);
-    // if (compileErrorMessage) {
-    //     return compileErrorMessage;
-    // }
-
-    // if (outputText === undefined) {
-    //     return "ERROR: Unknown Compilation Issue";
-    // }
-
-    // const result = runJavaScript(outputText, operands);
-    // return result;
-
+    if (run) {
+        const values = unpackOperands(operands);
+        return run(code, values)
+    }
+    return `${runner} NOT Implemented`;
 }
 
 async function runPython(code: string, operands: any[][][]) {
-    return "Python NOT Implemented";
+    return runArbitrary("runPython", code, operands);
+}
+
+async function runJavaScript(code: string, operands: any[][][]) {
+    return runArbitrary("runJavaScript", code, operands);
+}
+
+async function runTypeScript(code: string, operands: any[][][]) {
+    return runArbitrary("runTypeScript", code, operands);
 }

@@ -5,7 +5,20 @@ let codeArea: HTMLTextAreaElement | undefined = undefined;
 let cellAddress: string | undefined = undefined;
 
 import { example } from "./example";
+import { runJavaScript } from "./runJavaScript";
 import { runPython } from "./runPython";
+import { runTypeScript } from "./runTypeScript";
+
+type runCode = (code: string, args?: unknown[]) => Promise<unknown>;
+
+declare interface window {
+    sharedState?: {
+        value: string;
+        runPython: runCode;
+        runJavaScript: runCode;
+        runTypeScript: runCode;
+    }
+}
 
 // The initialize function must be run each time a new page is loaded
 Office.onReady(() => {
@@ -24,6 +37,9 @@ Office.onReady(() => {
     });
 
     codeArea = document.getElementById("code") as HTMLTextAreaElement;
+
+    // initial shared state
+    window["sharedState"] = {value: "empty", runPython, runJavaScript, runTypeScript};
 });
 
 function setEditorText({ text, cell }) {
@@ -90,13 +106,13 @@ export async function run(): Promise<void> {
     //const code = getEditorText();
     // run appropriate version
 
-    let result = runPython(`
+    let result = await runPython(`
 import sys
 sys.version
     `);
     console.log(result);
 
-    result = runPython(
+    result = await runPython(
         `
 [a,b, *other] = args
 a + b

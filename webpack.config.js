@@ -69,14 +69,9 @@ module.exports = async (env, options) => {
                 input: "./src/functions/functions.ts",
             }),
             new HtmlWebpackPlugin({
-                filename: "functions.html",
-                template: "./src/functions/functions.html",
-                chunks: ["functions"],
-            }),
-            new HtmlWebpackPlugin({
                 filename: "taskpane.html",
                 template: "./src/taskpane/taskpane.html",
-                chunks: ["taskpane"],
+                chunks: ["taskpane", "functions"],
             }),
             new CopyWebpackPlugin({
                 patterns: [
