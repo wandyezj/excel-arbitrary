@@ -1,10 +1,10 @@
 /* eslint-disable */
 
-let codeArea: HTMLTextAreaElement | undefined = undefined;
 // address is not tracked
 let cellAddress: string | undefined = undefined;
 
 import { example } from "./example";
+import { getLanguage } from "./getLanguage";
 import { runJavaScript } from "./runJavaScript";
 import { runPython } from "./runPython";
 import { runTypeScript } from "./runTypeScript";
@@ -21,10 +21,27 @@ declare interface window {
 }
 
 const elements = {
+    getElement(id: string) {
+        const element = document.getElementById(id);
+        if (element === undefined) {
+            throw new Error(`undefined ${id}`);
+        }
+        return element;
+    },
+
     buttonSelectId:"button_select",
     get buttonSelect() {
-        const element = document.getElementById(this.buttonSelectId);
-        return element
+        return this.getElement(this.buttonSelectId) as HTMLButtonElement;
+    },
+
+    textareaCodeLanguageId: "textarea_code_language",
+    get textareaCodeLanguage() {
+        return this.getElement(this.textareaCodeLanguageId) as HTMLTextAreaElement;
+    },
+
+    textareaCodeId: "code",
+    get textareaCode() {
+        return this.getElement(this.textareaCodeId) as HTMLTextAreaElement;
     }
 }
 
@@ -44,8 +61,6 @@ Office.onReady(() => {
             element.onclick = value;
         }
     });
-
-    codeArea = document.getElementById("code") as HTMLTextAreaElement;
 
     // initial shared state
     window["sharedState"] = {
@@ -77,11 +92,7 @@ let selectOn = false
 async function select() {
     // toggle
     selectOn = !selectOn;
-    debugger;
-    const button = elements.buttonSelect;
-    if (button) {
-        button.innerText = `Toggle Select Edit Cell${selectOn ? " (currently:ON)" : ""}`;
-    }
+    elements.buttonSelect.innerText = `Toggle Select Edit Cell${selectOn ? " (currently:ON)" : ""}`;
 }
 
 
@@ -90,11 +101,11 @@ function onSelectionChanged(worksheetId: string, address: string) {
         Excel.run(async (context) => {
             const worksheet = context.workbook.worksheets.getItem(worksheetId);
             const range = worksheet.getRange(address);
-            
+
             range.load(["formulas"]);
             await context.sync();
             const formulas = range.formulas;
-    
+
             if (formulas.length === 1 && formulas[0].length === 1) {
                 const text = formulas[0][0];
                 const cell = address;
@@ -108,15 +119,16 @@ function onSelectionChanged(worksheetId: string, address: string) {
 
 function setEditorText({ text, cell }) {
     console.log(`set: ${cell} ${text}`);
-    if (codeArea) {
-        codeArea.value = text;
-    }
-
+    elements.textareaCode.value = text;
     cellAddress = cell;
+
+    // language
+    const language = getLanguage(text)
+    elements.textareaCodeLanguage.value = language;
 }
 
 function getEditorText() {
-    const text = codeArea?.value || "";
+    const text = elements.textareaCode.value || "";
     const cell = cellAddress;
     console.log(`get: ${cell} ${text}`);
     return { text, cell };

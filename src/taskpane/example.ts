@@ -81,7 +81,7 @@ run - Python - basic
 Use special local args
 to pass in values`,
             code: `#python
-[a] = args
+[a, *other] = args
 a * a`,
         });
     });
