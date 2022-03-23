@@ -52,3 +52,4 @@ npm run start:web -- --document "url"
 - how to clear cache on web?
 - custom function stick around can't replace?
 - should wait for server to start before launching the application
+- event add and remove completely unintuitive

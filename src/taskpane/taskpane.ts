@@ -20,6 +20,14 @@ declare interface window {
     };
 }
 
+const elements = {
+    buttonSelectId:"button_select",
+    get buttonSelect() {
+        const element = document.getElementById(this.buttonSelectId);
+        return element
+    }
+}
+
 // The initialize function must be run each time a new page is loaded
 Office.onReady(() => {
     const mapping: [string, () => Promise<void>][] = [
@@ -27,6 +35,7 @@ Office.onReady(() => {
         ["button_edit", edit],
         ["button_save", save],
         ["button_run", run],
+        [elements.buttonSelectId, select],
     ];
 
     mapping.forEach(([key, value]) => {
@@ -45,7 +54,57 @@ Office.onReady(() => {
         runJavaScript,
         runTypeScript,
     };
+
+    selectSetup();
 });
+
+//#region "select"
+
+function selectSetup() {
+    // Activate handler and keep it on the whole time
+    Excel.run(async (context) => {
+        context.workbook.worksheets.onSelectionChanged.add(async (event) => {
+            await onSelectionChanged(event.worksheetId, event.address);
+        });
+    });
+}
+
+/**
+ * should the selection changed event handler be run?
+ * adjust the button text to reflect current state
+ */
+let selectOn = false
+async function select() {
+    // toggle
+    selectOn = !selectOn;
+    debugger;
+    const button = elements.buttonSelect;
+    if (button) {
+        button.innerText = `Toggle Select Edit Cell${selectOn ? " (currently:ON)" : ""}`;
+    }
+}
+
+
+function onSelectionChanged(worksheetId: string, address: string) {
+    if (selectOn) {
+        Excel.run(async (context) => {
+            const worksheet = context.workbook.worksheets.getItem(worksheetId);
+            const range = worksheet.getRange(address);
+            
+            range.load(["formulas"]);
+            await context.sync();
+            const formulas = range.formulas;
+    
+            if (formulas.length === 1 && formulas[0].length === 1) {
+                const text = formulas[0][0];
+                const cell = address;
+                setEditorText({text, cell});
+            } 
+        })
+    }
+}
+
+//#endregion "select"
 
 function setEditorText({ text, cell }) {
     console.log(`set: ${cell} ${text}`);
@@ -63,10 +122,11 @@ function getEditorText() {
     return { text, cell };
 }
 
+
 /**
- *
+ * saved editor content to selected cell
  */
-export async function save(): Promise<void> {
+async function save(): Promise<void> {
     await Excel.run(async (context) => {
         const workbook = context.workbook;
         const range = workbook.getSelectedRange();
@@ -88,7 +148,7 @@ export async function save(): Promise<void> {
     });
 }
 
-export async function edit(): Promise<void> {
+async function edit(): Promise<void> {
     await Excel.run(async (context) => {
         const workbook = context.workbook;
         const range = workbook.getSelectedRange();
@@ -107,7 +167,9 @@ export async function edit(): Promise<void> {
     });
 }
 
-export async function run(): Promise<void> {
+
+// for run to work
+async function run(): Promise<void> {
     //const code = getEditorText();
     // run appropriate version
 
