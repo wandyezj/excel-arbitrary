@@ -51,3 +51,4 @@ npm run start:web -- --document "url"
 - why does dev-server fail all the time?
 - how to clear cache on web?
 - custom function stick around can't replace?
+- should wait for server to start before launching the application

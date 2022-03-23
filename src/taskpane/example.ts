@@ -13,9 +13,13 @@ function addTestRange(
         value?: string | number;
     }
 ) {
+    const descriptionValue = description.trim();
+    // if run is not registered than does not write
+    const formulaValue = formula || `=TEST5(C${n}, D${n})`;
+    const valueValue = value || 5;
     worksheet.getRange(`A${n}:D${n}`).values = [
         // eslint-disable-next-line
-        [description.trim(), formula || `=RUN(C${n}, D${n})`, code, value || 5],
+        [descriptionValue, formulaValue , code, valueValue],
     ];
 }
 
