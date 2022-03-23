@@ -2,8 +2,10 @@
 
 import { unpackOperands } from "./unpackOperands";
 
-
-export async function runLanguage(code: string, operands: any[][][]): Promise<string> {
+export async function runLanguage(
+    code: string,
+    operands: any[][][]
+): Promise<string> {
     // unpack operands
     try {
         const language = getLanguage(code);
@@ -46,24 +48,22 @@ function getLanguage(code: string): Language {
     return Language.Unknown;
 }
 
-
-
 interface window {
     sharedState?: {
         value: string;
         runPython: (code: string, args?: any[]) => Promise<unknown>;
         runJavaScript: (code: string, args?: any[]) => Promise<unknown>;
         runTypeScript: (code: string, args?: any[]) => Promise<unknown>;
-    }
+    };
 }
 
 async function runArbitrary(runner: string, code: string, operands: any[][][]) {
-    const sharedState = window ?  window["sharedState"] : undefined;
-    const run = sharedState? sharedState[runner] : undefined;
+    const sharedState = window ? window["sharedState"] : undefined;
+    const run = sharedState ? sharedState[runner] : undefined;
 
     if (run) {
         const values = unpackOperands(operands);
-        return run(code, values)
+        return run(code, values);
     }
     return `${runner} NOT Implemented`;
 }

@@ -19,7 +19,7 @@ function addTestRange(
     const valueValue = value || 5;
     worksheet.getRange(`A${n}:D${n}`).values = [
         // eslint-disable-next-line
-        [descriptionValue, formulaValue , code, valueValue],
+        [descriptionValue, formulaValue, code, valueValue],
     ];
 }
 

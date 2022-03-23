@@ -1,8 +1,13 @@
 import { compileTypeScriptCode } from "./compileTypeScriptCode";
 import { runJavaScript } from "./runJavaScript";
 
-export async function runTypeScript(code: string, args: unknown[] = []): Promise<unknown> {
-    const {outputText, compileErrorMessage } = await compileTypeScriptCode(code);
+export async function runTypeScript(
+    code: string,
+    args: unknown[] = []
+): Promise<unknown> {
+    const { outputText, compileErrorMessage } = await compileTypeScriptCode(
+        code
+    );
     if (compileErrorMessage) {
         return compileErrorMessage;
     }
@@ -13,5 +18,4 @@ export async function runTypeScript(code: string, args: unknown[] = []): Promise
 
     const result = runJavaScript(outputText, args);
     return result;
-
 }

@@ -17,7 +17,7 @@ declare interface window {
         runPython: runCode;
         runJavaScript: runCode;
         runTypeScript: runCode;
-    }
+    };
 }
 
 // The initialize function must be run each time a new page is loaded
@@ -39,7 +39,12 @@ Office.onReady(() => {
     codeArea = document.getElementById("code") as HTMLTextAreaElement;
 
     // initial shared state
-    window["sharedState"] = {value: "empty", runPython, runJavaScript, runTypeScript};
+    window["sharedState"] = {
+        value: "empty",
+        runPython,
+        runJavaScript,
+        runTypeScript,
+    };
 });
 
 function setEditorText({ text, cell }) {
