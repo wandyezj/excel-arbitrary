@@ -1,13 +1,17 @@
 /* eslint-disable */
 
-// address is not tracked
-let cellAddress: string | undefined = undefined;
 
 import { example } from "./example";
-import { getLanguage } from "./getLanguage";
+import { getLanguage, Language } from "./getLanguage";
 import { runJavaScript } from "./runJavaScript";
 import { runPython } from "./runPython";
 import { runTypeScript } from "./runTypeScript";
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+
+
+// address is not tracked
+let cellAddress: string | undefined = undefined;
+
 
 type runCode = (code: string, args?: unknown[]) => Promise<unknown>;
 
@@ -39,11 +43,87 @@ const elements = {
         return this.getElement(this.textareaCodeLanguageId) as HTMLTextAreaElement;
     },
 
-    textareaCodeId: "code",
+    textareaCodeId: "textarea_code",
     get textareaCode() {
         return this.getElement(this.textareaCodeId) as HTMLTextAreaElement;
+    },
+
+    divMonacoId: "div_monaco",
+    get divMonaco() {
+        return this.getElement(this.divMonacoId) as HTMLDivElement;
     }
 }
+
+
+//#region "editor"
+
+let editor: monaco.editor.IStandaloneCodeEditor | undefined = undefined;
+function createMonacoEditor() {
+    const div = elements.divMonaco;
+    editor = monaco.editor.create(div, {
+        value: ``,
+        language: 'javascript',
+        theme: 'vs'
+    });
+
+}
+
+function languageToMonacoLanguage(language: Language) {
+    switch (language) {
+        case Language.JavaScript:
+            return "javascript";
+        case Language.TypeScript:
+            return "typescript";
+        case Language.Python:
+            return "python";
+        default:
+            return "plaintext";
+    }
+}
+
+function setMonacoEditorText(language: Language, code: string) {
+    const newMonacoLanguage = languageToMonacoLanguage(language);
+    console.log(newMonacoLanguage);
+
+    if (editor) {
+        const model = monaco.editor.createModel(code, newMonacoLanguage);
+        editor.setModel(model);
+    }
+}
+
+function getMonacoEditorText(): string  | undefined{
+
+    return editor?.getModel()?.getValue();
+
+}
+
+
+function setEditorText({ text, cell }) {
+    console.log(`set: ${cell} ${text}`);
+    //elements.textareaCode.value = text;
+    cellAddress = cell;
+
+    // language
+    const language = getLanguage(text)
+    elements.textareaCodeLanguage.value = language;
+
+    // Set Up the Monaco Editor
+    setMonacoEditorText(language, text);
+}
+
+function getEditorText() {
+    //const text = elements.textareaCode.value || "";
+    const text = getMonacoEditorText() || "";
+    const cell = cellAddress;
+    console.log(`get: ${cell} ${text}`);
+    return { text, cell };
+}
+
+
+
+createMonacoEditor();
+
+//#endregion "editor"
 
 // The initialize function must be run each time a new page is loaded
 Office.onReady(() => {
@@ -117,23 +197,6 @@ function onSelectionChanged(worksheetId: string, address: string) {
 
 //#endregion "select"
 
-function setEditorText({ text, cell }) {
-    console.log(`set: ${cell} ${text}`);
-    elements.textareaCode.value = text;
-    cellAddress = cell;
-
-    // language
-    const language = getLanguage(text)
-    elements.textareaCodeLanguage.value = language;
-}
-
-function getEditorText() {
-    const text = elements.textareaCode.value || "";
-    const cell = cellAddress;
-    console.log(`get: ${cell} ${text}`);
-    return { text, cell };
-}
-
 
 /**
  * saved editor content to selected cell
@@ -200,3 +263,5 @@ a + b
     );
     console.log(result);
 }
+
+

@@ -6,6 +6,8 @@ const devCerts = require("office-addin-dev-certs");
 const CopyWebpackPlugin = require("copy-webpack-plugin");
 const CustomFunctionsMetadataPlugin = require("custom-functions-metadata-plugin");
 const HtmlWebpackPlugin = require("html-webpack-plugin");
+const MonacoWebpackPlugin = require('monaco-editor-webpack-plugin');
+
 
 const urlDev = "https://localhost:3000/";
 const urlProd = "https://www.contoso.com/"; // CHANGE THIS TO YOUR PRODUCTION DEPLOYMENT LOCATION
@@ -61,9 +63,20 @@ module.exports = async (env, options) => {
                         filename: "assets/[name][ext][query]",
                     },
                 },
+                {
+                    test: /\.css$/,
+                    use: ['style-loader', 'css-loader']
+                },
+                {
+                    test: /\.ttf$/,
+                    use: ['file-loader']
+                }
             ],
         },
         plugins: [
+            new MonacoWebpackPlugin({
+                languages: ['typescript', 'javascript', 'python']
+            }),
             new CustomFunctionsMetadataPlugin({
                 output: "functions.json",
                 input: "./src/functions/functions.ts",
