@@ -168,7 +168,7 @@ function selectSetup() {
  * should the selection changed event handler be run?
  * adjust the button text to reflect current state
  */
-let selectOn = false
+let selectOn = false;
 async function select() {
     // toggle
     selectOn = !selectOn;
@@ -177,6 +177,7 @@ async function select() {
 
 
 function onSelectionChanged(worksheetId: string, address: string) {
+    console.log(`selectOn: ${selectOn}`);
     if (selectOn) {
         Excel.run(async (context) => {
             const worksheet = context.workbook.worksheets.getItem(worksheetId);
